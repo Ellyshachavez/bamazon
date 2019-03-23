@@ -1,13 +1,16 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var consoleTable = require("console.table");
 
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password:"password",
+    password:"zackylove4649",
     database: "bamazon"
 });
+
+var productArr = [];
 
 connection.connect(function(err) {
     if(err) throw err;
@@ -20,10 +23,10 @@ function start() {
         for (var i = 0; i < res.length; i++) {
             var tempArry =
             {
-                ID: res[i].id,
-                Product: res[i].product,
-                Department: res[i].department,
-                Price: res[i].price,
+                ID: res[i].item_id,
+                Product: res[i].product_name,
+                Department: res[i].department_name,
+                Price: res[i].purchase_price,
                 Qty: res[i].quantity,
                 Sales: res[i].sales
             }
@@ -54,10 +57,32 @@ function inquireForm() {
         if (reqQty > itemQty) {
             console.log("Insuficient Quantity!");
             productArr = [];
-            displayInventory();
+            start();
         } else {
             var cost = (productArr[arrayID].Price*reqQty);
-            makepurchase();
+            makepurchase(itemID, arrayID, itemQty, reqQty, cost);
         }
     });
+};
+
+function makepurchase(itemID, arrayID, itemQty, reqQty, cost) {
+    var newQty = (parseInt(itemQty) - parseInt(reqQty));
+    var newProdSales = (parseInt(productArr[arrayID].Sales) + parseInt(cost));
+    
+    connection.query("UPDATE products SET ?, ? WHERE item_id = " + itemID,
+    [
+        {
+            quantity: newQty
+        },
+        {
+            sales: newProdSales
+        }
+    ],
+        function (err, res) {
+            if (err) throw err;
+            console.log("Congrats! You ordered " + reqQty + " " + (productArr[arrayID].Product) + "(s) for $" + cost + ".");
+            connection.end();
+        });
 }
+
+
