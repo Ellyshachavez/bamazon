@@ -1,6 +1,11 @@
 # bamazon
 This is an Amazon-like storefront with MySQL.
 
+Here is google link to view a 1 minute video of the application in Node.js: https://drive.google.com/file/d/1UJITg_eFx8QWZkJgFx02IrrI9Csd8x3h/view?usp=sharing
+
+
+APP DETAILS
+
 Database has around 10 different products. 
 Running this application will display all of the items available for sale. Include the ids, names, and prices of products for sale.
 The app should then prompt users with two messages.
